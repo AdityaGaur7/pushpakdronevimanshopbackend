@@ -13,14 +13,28 @@ const app = express();
 const PORT = process.env.PORT || 8080;
 
 // CORS Setup
+const allowedOrigins = [
+  'http://localhost:4200',  // Development
+  'https://pushpakdronevimanshop-lhzickrw3-aditya-gaurs-projects-3468fcb6.vercel.app', // Vercel frontend URL
+];
+
 app.use(cors({
-  origin: [
-    'http://localhost:4200',
-    '*'
-  ], // Remove the trailing slash
+  origin: function(origin, callback) {
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      // Allow requests from allowed origins
+      callback(null, true);
+    } else {
+      // Reject requests from disallowed origins
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,  // Allow cookies and authorization headers
 }));
+
+// Allow preflight requests
+app.options('*', cors());
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI)
@@ -40,7 +54,7 @@ app.use('/', (req, res) => {
 });
 
 // Error handling middleware (must be placed after routes)
-app.use(errorMiddleware); 
+app.use(errorMiddleware);
 
 // Start server
 app.listen(PORT, () => {
