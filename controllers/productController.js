@@ -73,9 +73,23 @@ exports.searchProducts = async (req, res) => {
 
 exports.getTop4SoldProducts = async (req, res) => {
   try {
-    const products = await Product.find().sort({ sold: -1 }).limit(4);
+    // Ensure 'sold' exists in your schema, or replace with the correct field name
+    const products = await Product.find()
+      .sort({ sold: -1 }) // Adjust this field to match the actual field for sold count
+      .limit(4);
+    
+    if (!products.length) {
+      return res.status(404).json({ message: 'No products found' });
+    }
+
     res.json(products);
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error });
+    console.error('Error fetching top sold products:', error); // Log error for debugging
+    res.status(500).json({
+      message: 'Server error',
+      error: error.message || error // Send the error message for debugging
+    });
   }
+
+
 };
