@@ -16,7 +16,7 @@ const app = express();
 const PORT = process.env.PORT || 8080;
 
 app.use(cors({
-  origin: 'http://localhost:4200', // Replace with your frontend URL
+  origin: ['http://localhost:4200','https://pushpakdronevimanshop-7nam1ife9-aditya-gaurs-projects-3468fcb6.vercel.app/'], // Replace with your frontend URL
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
