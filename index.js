@@ -20,7 +20,7 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: function(origin, callback) {
-    console.log('Origin:', origin);  // Log the origin for debugging
+
     if (!origin || allowedOrigins.indexOf(origin) !== -1) {
       // Allow requests from allowed origins
       callback(null, true);

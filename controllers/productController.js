@@ -63,13 +63,26 @@ exports.deleteProduct = async (req, res) => {
 exports.searchProducts = async (req, res) => {
   const { keyword } = req.params;
 
+  if (!keyword) {
+    return res.status(400).json({ message: 'Keyword is required' });
+  }
+
   try {
-    const products = await Product.find({ name: { $regex: keyword, $options: 'i' } });
+    const products = await Product.find({
+      $or: [
+        { name: { $regex: keyword, $options: 'i' } },   // Search in 'name' field
+        { description: { $regex: keyword, $options: 'i' } },  // Search in 'description' field
+        { category: { $regex: keyword, $options: 'i' } }   // Search in 'category' field
+      ]
+    });
+
     res.json(products);
   } catch (error) {
+    console.error("Error searching for products:", error);
     res.status(500).json({ message: 'Server error', error });
   }
 };
+
 
 exports.getTop4SoldProducts = async (req, res) => {
   try {
