@@ -15,7 +15,7 @@ const PORT = process.env.PORT || 8080;
 // CORS Setup
 const allowedOrigins = [
   'http://localhost:4200',  // Development
-  'https://pushpakdronevimanshop-lhzickrw3-aditya-gaurs-projects-3468fcb6.vercel.app', // Vercel frontend URL
+  'https://pushpakdronevimanshop.vercel.app/', // Vercel frontend URL
 ];
 
 app.use(cors({
