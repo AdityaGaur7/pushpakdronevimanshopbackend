@@ -14,12 +14,13 @@ const PORT = process.env.PORT || 8080;
 
 // CORS Setup
 const allowedOrigins = [
-  'http://localhost:4200',  // Development
-  'https://pushpakdronevimanshop.vercel.app/', // Vercel frontend URL
+  'http://localhost:4200',  // Local Development
+  'https://pushpakdronevimanshop.vercel.app', // Vercel frontend URL (no trailing slash)
 ];
 
 app.use(cors({
   origin: function(origin, callback) {
+    console.log('Origin:', origin);  // Log the origin for debugging
     if (!origin || allowedOrigins.indexOf(origin) !== -1) {
       // Allow requests from allowed origins
       callback(null, true);
@@ -33,8 +34,13 @@ app.use(cors({
   credentials: true,  // Allow cookies and authorization headers
 }));
 
-// Allow preflight requests
-app.options('*', cors());
+// Handle OPTIONS preflight request
+app.options('*', (req, res) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.status(200).end();
+});
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI)
