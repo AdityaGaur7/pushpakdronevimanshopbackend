@@ -34,11 +34,17 @@ app.use(cors({
   credentials: true,  // Allow cookies and authorization headers
 }));
 
-// Handle OPTIONS preflight request
-app.options('*', (req, res) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
+// Middleware for logging and handling CORS preflight
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');  // Allow all origins
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');  // Allow credentials (cookies, headers)
+  next();
+});
+
+// Allow preflight requests
+app.options('*', (req, res) => {
   res.status(200).end();
 });
 
